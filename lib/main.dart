@@ -1,4 +1,4 @@
-import 'package:donation/views/login_page.dart';
+import 'package:donation/views/intro_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(),
+      home: IntroPage(),
     );
   }
 }
