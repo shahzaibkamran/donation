@@ -16,3 +16,12 @@ dev_dependencies:
   flutter_lints: ^3.0.0
 flutter:
   uses-material-design: true
+  fonts:
+    - family: RobotoMono
+      fonts:
+        - asset: fonts/RobotoMono-Italic-VariableFont_wght.ttf
+        - asset: fonts/RobotoMono-VariableFont_wght.ttf
+  assets:
+    - assets/intro_banner.png
+    - assets/login_banner.png
+    - assets/mastercard.png
