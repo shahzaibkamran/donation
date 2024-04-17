@@ -1,5 +1,10 @@
+import 'package:donation/bloc/auth_bloc/auth_bloc.dart';
+import 'package:donation/bloc/auth_bloc/auth_bloc_event.dart';
+import 'package:donation/bloc/auth_bloc/auth_bloc_state.dart';
 import 'package:donation/views/donations_page.dart';
+import 'package:donation/widgets/loader_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/custom_button_widget.dart';
 import '../widgets/custom_text_widget.dart';
 import '../widgets/custom_textfield_widget.dart';
@@ -9,7 +14,8 @@ class LoginPage extends StatelessWidget {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  AuthBloc authBloc = AuthBloc(AuthBlocInitialState());
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,11 +60,55 @@ class LoginPage extends StatelessWidget {
                     CustomTextField(labelText: "Password",controller: passwordController,prefixIcon: Icons.lock_outline,),
                     const SizedBox(height: 20),
                     CustomButton(onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const DonationsPage()), // Navigate to NextScreen
-                      );
+                      if(emailController.text == "" || passwordController.text == "" ){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Email or Password can't be empty",
+                              style:TextStyle(color: Colors.white,fontSize:16.0),
+                            ),
+                            backgroundColor: Colors.red,
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                      }else{
+                          authBloc.add(LoginEvent(emailController.text , passwordController.text));
+                      }
                     }, buttonText: "LOGIN"),
+                    BlocConsumer(
+                      bloc:authBloc,
+                        listener: (context,state){
+                          if(state is LoginState){
+                            if(state.loginResponse.status == "ok"){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const DonationsPage()), // Navigate to NextScreen
+                              );
+                            }
+                          }
+                          if(state is AuthBlocFailureState){
+                            ScaffoldMessenger.of(context).showSnackBar(
+                               SnackBar(
+                                content: Text(
+                                  state.loginResponse.error ?? "unknown error",
+                                  style:const TextStyle(color: Colors.white,fontSize:16.0),
+                                ),
+                                backgroundColor: Colors.red,
+                                duration:const Duration(seconds: 3),
+                              ),
+                            );
+                          }
+                          },
+                        builder: (context,state) {
+                          if (state is AuthBlocLoadingState) {
+                            return const LoaderWidget();
+                          }
+                          return const Padding(
+                            padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
+                            child: SizedBox(width: 2),
+                          );
+                        }
+                    ),
                   ],
                 ),
               ),
