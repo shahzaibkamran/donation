@@ -2,8 +2,7 @@ import 'package:donation/views/login_page.dart';
 import 'package:donation/views/signup_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/custom_button_widget.dart';
-import '../widgets/custom_text_widget.dart';
-import '../widgets/custom_textfield_widget.dart';
+
 
 class IntroPage extends StatelessWidget {
   IntroPage({super.key});
