@@ -1,21 +1,25 @@
-import 'package:donation/bloc/auth_bloc/auth_bloc.dart';
-import 'package:donation/bloc/auth_bloc/auth_bloc_event.dart';
-import 'package:donation/bloc/auth_bloc/auth_bloc_state.dart';
+import 'package:donation/bloc/register_bloc/register_bloc.dart';
+import 'package:donation/bloc/register_bloc/register_bloc_event.dart';
+import 'package:donation/bloc/register_bloc/register_bloc_state.dart';
 import 'package:donation/views/donations_page.dart';
-import 'package:donation/widgets/loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/custom_button_widget.dart';
 import '../widgets/custom_text_widget.dart';
 import '../widgets/custom_textfield_widget.dart';
+import '../widgets/loader_widget.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class SignupPage extends StatelessWidget {
+  SignupPage({super.key});
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  AuthBloc authBloc = AuthBloc(AuthBlocInitialState());
-  
+  final TextEditingController fnameController = TextEditingController();
+  final TextEditingController lnameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+
+  RegisterBloc regBloc = RegisterBloc(RegisterBlocInitialState());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +46,7 @@ class LoginPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.6, // Adjust the height as needed
+                height: MediaQuery.of(context).size.height * 0.7, // Adjust the height as needed
                 padding: const EdgeInsets.all(20),
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -53,9 +57,15 @@ class LoginPage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    const CustomText(title: 'LOGIN',),
-                    const SizedBox(height: 20),
+                    const CustomText(title: 'SIGN UP',),
+                    const SizedBox(height: 30),
                     CustomTextField(labelText: "Email",controller: emailController,prefixIcon: Icons.email_outlined),
+                    const SizedBox(height: 20),
+                    CustomTextField(labelText: "First Name",controller: fnameController,prefixIcon: Icons.person_2_outlined,),
+                    const SizedBox(height: 20),
+                    CustomTextField(labelText: "Last Name",controller: lnameController,prefixIcon: Icons.person_2_outlined,),
+                    const SizedBox(height: 20),
+                    CustomTextField(labelText: "Phone Number",controller: phoneController,prefixIcon: Icons.phone,),
                     const SizedBox(height: 20),
                     CustomTextField(labelText: "Password",controller: passwordController,prefixIcon: Icons.lock_outline,),
                     const SizedBox(height: 20),
@@ -72,13 +82,14 @@ class LoginPage extends StatelessWidget {
                           ),
                         );
                       }else{
-                          authBloc.add(LoginEvent(emailController.text , passwordController.text));
+                        regBloc.add(RegisterEvent(emailController.text , passwordController.text,phoneController.text,fnameController.text,lnameController.text));
                       }
-                    }, buttonText: "LOGIN"),
+
+                    }, buttonText: "SIGN UP"),
                     BlocConsumer(
-                      bloc:authBloc,
+                        bloc:regBloc,
                         listener: (context,state){
-                          if(state is LoginState){
+                          if(state is RegisterState){
                             if(state.loginResponse.status == "ok"){
                               Navigator.push(
                                 context,
@@ -86,9 +97,9 @@ class LoginPage extends StatelessWidget {
                               );
                             }
                           }
-                          if(state is AuthBlocFailureState){
+                          if(state is RegisterBlocFailureState){
                             ScaffoldMessenger.of(context).showSnackBar(
-                               SnackBar(
+                              SnackBar(
                                 content: Text(
                                   state.loginResponse.error ?? "unknown error",
                                   style:const TextStyle(color: Colors.white,fontSize:16.0),
@@ -98,13 +109,13 @@ class LoginPage extends StatelessWidget {
                               ),
                             );
                           }
-                          },
+                        },
                         builder: (context,state) {
-                          if (state is AuthBlocLoadingState) {
+                          if (state is RegisterBlocLoadingState) {
                             return const LoaderWidget();
                           }
                           return const Padding(
-                            padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
+                            padding: EdgeInsets.fromLTRB(0,8, 0, 0),
                             child: SizedBox(width: 2),
                           );
                         }

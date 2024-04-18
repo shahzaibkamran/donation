@@ -9,7 +9,11 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
-
+  bloc:
+  flutter_bloc:
+  http:
+  equatable: ^2.0.5
+#  shared_preferences: ^2.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -25,3 +29,5 @@ flutter:
     - assets/intro_banner.png
     - assets/login_banner.png
     - assets/mastercard.png
+    - assets/ayat.png
+    - assets/aoa.png
